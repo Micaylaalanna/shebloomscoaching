@@ -1,0 +1,142 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="She Blooms Coaching by Micayla Holderfield helps women move from self-doubt to spirit-led confidence through faith-based coaching.">
+  <meta name="keywords" content="faith-based coaching, women empowerment, Christian coaching">
+  <title>She Blooms Coaching</title>
+  <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #FFF1F2; /* Light pink background */
+      color: #2D3748; /* Professional dark gray for text */
+      font-family: 'Georgia', serif; /* Professional font */
+    }
+    .cursive {
+      font-family: 'Parisienne', cursive;
+    }
+    .section-heading {
+      color: #DBAFC1; /* Muted pink for headings */
+      font-weight: 600;
+    }
+    .button {
+      background-color: #F8B7C9; /* Soft pink button */
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #E89BB0; /* Slightly darker pink on hover */
+    }
+    .container {
+      max-width: 960px; /* Wider container for professional look */
+    }
+    .section {
+      background-color: #FFFFFF; /* White background for sections */
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center min-h-screen">
+  <!-- Header -->
+  <header class="w-full py-8 text-center bg-[#FFF1F2]">
+    <h1 class="text-5xl cursive text-[#DBAFC1]">She Blooms Coaching</h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-12 flex flex-col gap-12">
+    <!-- Bio Section -->
+    <section class="section text-center">
+      <h2 class="text-3xl section-heading mb-4">My Vision</h2>
+      <p class="text-lg leading-relaxed">
+        Hello beautiful! My name is Micayla, a 26-year-old faith-driven coach dedicated to empowering women to embrace their God-given purpose. My mission is to help women move from self-doubt to spirit-led confidence so they can flourish in who God created them to be. With a heart rooted in faith, I guide women through a transformative journey of self-discovery, using Bible-based wisdom to uncover their unique strengths and calling. My passion is to create a safe, nurturing space where women can grow closer to God, build unshakable confidence, and step boldly into the life they were designed for.
+      </p>
+    </section>
+
+    <!-- Coaching Program Section -->
+    <section class="section">
+      <h2 class="text-3xl section-heading mb-4 text-center">One-on-One Coaching Program</h2>
+      <ul class="list-disc list-inside text-lg leading-relaxed space-y-2">
+        <li>Weekly 30-Minute Sessions: Personalized coaching to guide your spiritual and personal growth.</li>
+        <li>Bible-Based Reflection: Thoughtful exercises grounded in scripture to deepen your faith.</li>
+        <li>Tailored Homework: Practical assignments to foster confidence and align with your God-given purpose.</li>
+      </ul>
+    </section>
+
+    <!-- Coaching Agreement Section -->
+    <section class="section">
+      <h2 class="text-3xl section-heading mb-4 text-center">Coaching Agreement</h2>
+      <p class="text-lg leading-relaxed">
+        At She Blooms Coaching, my faith-based approach is designed to empower you to flourish in your God-given purpose through a process rooted in scripture and spiritual growth. The purpose of this coaching is to guide you from self-doubt to spirit-led confidence, helping you align with who God created you to be. Please review the following terms:
+      </p>
+      <ul class="list-disc list-inside text-lg leading-relaxed space-y-2 mt-4">
+        <li><strong>Not Therapy or Counseling</strong>: Coaching is not therapy, counseling, or medical advice. It is a supportive process focused on personal and spiritual growth, not a substitute for professional mental health or medical care.</li>
+        <li><strong>Confidentiality</strong>: All sessions are confidential, and I am committed to protecting your privacy, sharing information only with your consent or as required by law.</li>
+        <li><strong>Your Commitment</strong>: You are responsible for actively participating in the coaching process, completing Bible-based reflections and homework, and showing up prepared for each session.</li>
+        <li><strong>Payment</strong>: Payment is due prior to the first coaching session via Zelle or PayPal. Details will be provided upon booking.</li>
+        <li><strong>Scheduling</strong>: You may reschedule sessions with at least 24 hours’ notice. Missed sessions without communication or rescheduling will be forfeited.</li>
+        <li><strong>No Guarantees</strong>: Coaching is a collaborative process that depends on your participation and effort. While I am committed to guiding you, I cannot promise specific outcomes or results.</li>
+      </ul>
+      <p class="text-lg leading-relaxed mt-4">
+        By engaging in coaching with She Blooms Coaching, you acknowledge that you understand this agreement, accept that coaching is not therapy, counseling, or medical care, and agree to take responsibility for your own growth and choices.
+      </p>
+      <p class="text-lg cursive text-[#DBAFC1] mt-6 text-right">
+        With grace,<br>Micayla Holderfield<br>She Blooms Coaching
+      </p>
+    </section>
+
+    <!-- Booking Section -->
+    <section class="section text-center">
+      <h2 class="text-3xl section-heading mb-4">Ready to Bloom?</h2>
+      <p class="text-lg leading-relaxed mb-6">Take the first step toward flourishing in your God-given purpose.</p>
+      <a href="https://calendly.com/micayla-holderfield/30min-coaching" target="_blank" class="inline-block px-8 py-3 text-lg button text-white rounded-full font-semibold">Book a Session</a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full py-6 text-center text-sm bg-[#FFF1F2]">
+    <p>&copy; 2025 She Blooms Coaching. All rights reserved.</p>
+  </footer>
+</body>
+</html>
